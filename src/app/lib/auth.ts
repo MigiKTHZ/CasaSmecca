@@ -33,7 +33,6 @@ export const authOptions: AuthOptions = {
         email: {
           label: "E-Mail",
           type: "email",
-          placeholder: "example@example.com",
         },
         password: {
           label: "Password",
@@ -41,6 +40,10 @@ export const authOptions: AuthOptions = {
         },
       },
       async authorize(credentials) {
+
+        if (!credentials?.email && !credentials?.password) {
+          console.log('The variable does not have a value');
+        }
         const user = await prisma.user.findUnique({
           where: {
             email: credentials?.email,

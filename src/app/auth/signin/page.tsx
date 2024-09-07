@@ -33,7 +33,7 @@ export default function Signin() {
                     <label className="block text-lime-950 text-sm font-bold mb-2">
                         E-Mail
                     </label>
-                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-lime-950 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="john.doe@example.com   " />
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-lime-950 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" placeholder="john.doe@example.com   " />
                 </div>
                 <div className="mb-6">
                     <label className="block text-lime-950 text-sm font-bold mb-2">
@@ -43,9 +43,9 @@ export default function Signin() {
                     <p className="text-red-700 text-xs italic">Please choose a password.</p>
                 </div>
                 <div className="flex items-center gap-2 justify-between">
-                    <button className="bg-lime-950 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                    <Button className="bg-lime-950 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onPress={() => signIn("credentials", { email: "miguel.example@example.com", password: "password123"})} type="button">
                         Sign In
-                    </button>
+                    </Button>
                     <a className="inline-block align-baseline font-bold text-xs text-white hover:text-blue-800" href="#">
                         Forgot Password?
                     </a>
