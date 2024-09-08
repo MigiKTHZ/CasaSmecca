@@ -1,9 +1,24 @@
 "use client"
+import { useState } from "react";
 import { Button } from "@nextui-org/react";
 import Image from "next/image";
 import { useSession, signIn, signOut } from "next-auth/react"
 
 export default function Signin() {
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleSignIn = () => {
+        signIn("credentials", {
+            email: email,
+            password: password,
+            redirect: true,
+            callbackUrl: "/"
+        });
+    };
+
+
     return (
         <main className="flex min-h-screen flex-col items-center bg-lime-900 justify-between p-24">
             <div className="bg-lime-700 p-4 rounded-lg shadow-lg">
@@ -33,20 +48,20 @@ export default function Signin() {
                     <label className="block text-lime-950 text-sm font-bold mb-2">
                         E-Mail
                     </label>
-                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-lime-950 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" placeholder="john.doe@example.com   " />
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-lime-950 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="john.doe@example.com" />
                 </div>
                 <div className="mb-6">
                     <label className="block text-lime-950 text-sm font-bold mb-2">
                         Password
                     </label>
-                    <input className="shadow appearance-none border border-red-700 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************" />
+                    <input className="shadow appearance-none border border-red-700 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="******************" />
                     <p className="text-red-700 text-xs italic">Please choose a password.</p>
                 </div>
                 <div className="flex items-center gap-2 justify-between">
-                    <Button className="bg-lime-950 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onPress={() => signIn("credentials", { email: "miguel.example@example.com", password: "password123"})} type="button">
+                    <Button className="bg-lime-950 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onPress={handleSignIn} type="button">
                         Sign In
                     </Button>
-                    <a className="inline-block align-baseline font-bold text-xs text-white hover:text-blue-800" href="#">
+                    <a className="inline-block align-baseline font-bold text-xs text-white hover:text-blue-800" href="/auth/register">
                         Forgot Password?
                     </a>
                 </div>

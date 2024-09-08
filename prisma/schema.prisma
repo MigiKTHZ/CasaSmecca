@@ -39,8 +39,13 @@ model ProductOrder {
 model User {
   userID    Int     @id @default(autoincrement())
   name      String  @db.VarChar(200)
+  firstname String  @db.VarChar(200)
   email     String  @unique @db.VarChar(200)
+  phoneNr   String  @db.VarChar(10)
   adress    String  @db.VarChar(200)
+  adressNr  String  @db.VarChar(6)
+  city      String  @db.VarChar(200)
+  plz       String  @db.VarChar(4)
   password  String  @db.VarChar(200)
   adminFlag Boolean
 }
