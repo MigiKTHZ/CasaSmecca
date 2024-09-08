@@ -18,25 +18,61 @@ export default function Register() {
     const [addressNr, setaddressNr] = useState("");
     const [city, setCity] = useState("");
     const [plz, setPlz] = useState("");
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
-    const Register = async () => {
-        const saltRounds = 10
-        const passwordhash = await bcrypt.hash(password, saltRounds);
-        let user = {
-            name: name,
-            firstname: firstname,
-            email: email,
-            password: passwordhash,
-            adress: address,
-            adressNr: addressNr,
-            phoneNr: phoneNr,
-            plz: plz,
-            city: city,
-            adminFlag: false,
+    const handleSubmit = async () => {
+        if (password !== verifiedPassword) {
+            setError("Passwords do not match");
+            return;
         }
-        const createUser = await prisma.user.create({
-            data: user
-        })
+
+        // Reset any existing messages
+        setError("");
+        setSuccess("");
+
+        try {
+            const response = await fetch("/api/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name,
+                    firstname,
+                    email,
+                    password,
+                    address,
+                    addressNr,
+                    phoneNr,
+                    plz,
+                    city,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to register");
+            }
+
+            setSuccess("Registration successful!");
+            // Reset form after success
+            setLastName("");
+            setFirstName("");
+            setEmail("");
+            setPassword("");
+            setVerifiedPassword("");
+            setPhoneNr("");
+            setAddress("");
+            setaddressNr("");
+            setCity("");
+            setPlz("");
+        } catch (error : unknown) {
+            if (error instanceof Error) { // Narrow the type to Error
+                setError("Registration failed: " + error.message);
+            } else {
+                setError("Registration failed: An unknown error occurred.");
+            }
+        }
     };
 
 
@@ -132,9 +168,13 @@ export default function Register() {
                 </div>
 
                 <div className="border-t-3 border-solid border-lime-100 rounded "></div>
+
+                {error && <p className="text-red-500">{error}</p>}
+                {success && <p className="text-green-500">{success}</p>}
+
                 <br />
                 <div className="flex items-center justify-between">
-                    <Button className="bg-lime-950 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full" onPress={Register} type="button">
+                    <Button className="bg-lime-950 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full" onPress={handleSubmit} type="button">
                         Jetzt Registrieren
                     </Button>
                 </div>
