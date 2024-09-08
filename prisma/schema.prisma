@@ -8,36 +8,47 @@ datasource db {
 }
 
 model CustomerOrder {
-  orderID        Int    @id @default(autoincrement())
+  orderID        Int            @id @default(autoincrement())
+  status         String         @db.VarChar(50)
+  shippingAdress String         @db.VarChar(200)
+  user           User           @relation(fields: [userID], references: [userID])
   userID         Int
-  status         String @db.VarChar(50)
-  shippingAdress String @db.VarChar(200)
+  productOrder   ProductOrder   @relation(fields: [productOrderID], references: [productOrderID])
+  productOrderID Int            @unique
 }
 
 model Product {
-  productID   Int     @id @default(autoincrement())
-  name        String  @db.VarChar(200)
-  description String  @db.VarChar(200)
-  stock       Int
-  price       Decimal @db.Decimal(10, 0)
-  categoryID  Int
-  image       String  @db.VarChar(200)
+  productID       Int             @id @default(autoincrement())
+  name            String          @db.VarChar(200)
+  description     String          @db.VarChar(200)
+  stock           Int
+  price           Decimal         @db.Decimal(10, 0)
+  image           String          @db.VarChar(200)
+  productCategory ProductCategory @relation(fields: [CategoryID], references: [CategoryID])
+  CategoryID      Int
+  ProductOrder    ProductOrder[]
 }
 
 model ProductCategory {
-  CategoryID Int    @id @default(autoincrement())
-  name       String @db.VarChar(200)
+  CategoryID   Int            @id @default(autoincrement())
+  name         String         @db.VarChar(200)
+  href         String         @db.VarChar(200)
+  image        String         @db.VarChar(200)
+  products     Product[]
 }
 
 model ProductOrder {
-  productOrderID Int @id @default(autoincrement())
-  ProductID      Int
-  count          Int
-  orderID        Int
+  productOrderID    Int             @id @default(autoincrement())
+  product           Product @relation(fields: [productID], references: [productID])
+  productID         Int
+  count             Int
+  customerOrder     CustomerOrder?
 }
 
 model User {
-  userID    Int     @id @default(autoincrement())
+  userID        Int             @id @default(autoincrement())
+  customerOrder CustomerOrder[]
+
   name      String  @db.VarChar(200)
   firstname String  @db.VarChar(200)
   email     String  @unique @db.VarChar(200)

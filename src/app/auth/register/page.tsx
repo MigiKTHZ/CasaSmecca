@@ -1,10 +1,6 @@
 "use client"
 import { useState } from "react";
 import { Button } from "@nextui-org/react";
-import Image from "next/image";
-import { User } from "@prisma/client";
-import prisma from "@/app/lib/prisma";
-import * as bcrypt from "bcrypt";
 
 export default function Register() {
 

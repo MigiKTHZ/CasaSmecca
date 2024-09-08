@@ -65,6 +65,9 @@ export default function Signin() {
                         Forgot Password?
                     </a>
                 </div>
+                <a className="inline-block align-baseline font-bold text-xs text-white hover:text-blue-800" href="/auth/register">
+                    
+                </a>
             </div>
 
         </main>
