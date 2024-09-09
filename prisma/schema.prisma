@@ -8,13 +8,13 @@ datasource db {
 }
 
 model CustomerOrder {
-  orderID        Int            @id @default(autoincrement())
-  status         String         @db.VarChar(50)
-  shippingAdress String         @db.VarChar(200)
-  user           User           @relation(fields: [userID], references: [userID])
+  orderID        Int          @id @default(autoincrement())
+  status         String       @db.VarChar(50)
+  shippingAdress String       @db.VarChar(200)
+  user           User         @relation(fields: [userID], references: [userID])
   userID         Int
-  productOrder   ProductOrder   @relation(fields: [productOrderID], references: [productOrderID])
-  productOrderID Int            @unique
+  productOrder   ProductOrder @relation(fields: [productOrderID], references: [productOrderID])
+  productOrderID Int          @unique
 }
 
 model Product {
@@ -30,19 +30,19 @@ model Product {
 }
 
 model ProductCategory {
-  CategoryID   Int            @id @default(autoincrement())
-  name         String         @db.VarChar(200)
-  href         String         @db.VarChar(200)
-  image        String         @db.VarChar(200)
-  products     Product[]
+  CategoryID Int       @id @default(autoincrement())
+  name       String    @db.VarChar(200)
+  href       String    @db.VarChar(200)
+  image      String    @db.VarChar(200)
+  products   Product[]
 }
 
 model ProductOrder {
-  productOrderID    Int             @id @default(autoincrement())
-  product           Product @relation(fields: [productID], references: [productID])
-  productID         Int
-  count             Int
-  customerOrder     CustomerOrder?
+  productOrderID Int            @id @default(autoincrement())
+  product        Product        @relation(fields: [productID], references: [productID])
+  productID      Int
+  count          Int
+  customerOrder  CustomerOrder?
 }
 
 model User {

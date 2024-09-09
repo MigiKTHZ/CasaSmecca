@@ -1,12 +1,11 @@
 import React from "react";
-import { MdStar } from "react-icons/md";
 import { HiOutlineArrowCircleRight } from "react-icons/hi";
 import Image from "next/image";
 
-export default function AlcoholDetails({
+export default function ProductDetails({
     params,
 }: {
-    params: { alcoholId: string };
+    params: { productId : string };
 }) {
     return (
         <>
