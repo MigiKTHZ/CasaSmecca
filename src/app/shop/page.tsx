@@ -12,7 +12,7 @@ export default async function Shop() {
                 <div className="grid grid-cols-2 gap-4">
                     {productCategories.map((category) => (
                         <div key={category.CategoryID} className="">
-                            <a href={category.href} className="flex items-center">
+                            <a href={"/shop/" + category.CategoryID} className="flex items-center">
                                 <Image src={category.image} className="size-full" alt="Flowbite Logo" width={240} height={320} />
                             </a>    
                         </div>

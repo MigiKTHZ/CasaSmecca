@@ -23,7 +23,7 @@ model Product {
   description     String          @db.VarChar(200)
   stock           Int
   price           Decimal         @db.Decimal(10, 0)
-  image           String          @db.VarChar(200)
+  image           String          @db.VarChar(200)      
   productCategory ProductCategory @relation(fields: [CategoryID], references: [CategoryID])
   CategoryID      Int
   ProductOrder    ProductOrder[]
@@ -32,7 +32,6 @@ model Product {
 model ProductCategory {
   CategoryID Int       @id @default(autoincrement())
   name       String    @db.VarChar(200)
-  href       String    @db.VarChar(200)
   image      String    @db.VarChar(200)
   products   Product[]
 }

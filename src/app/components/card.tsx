@@ -1,22 +1,23 @@
+"use client"
 import Image from "next/image";
-import { productItem } from "../lib/dummyItems";
 import { useSession } from "next-auth/react";
+import { Product } from "@prisma/client";
 
-export default function Card(props: productItem) {
+export default function Card(props: Product) {
     const { data: session } = useSession();
     return (
         <div className="bg-lime-100 max-w-sm rounded overflow-hidden shadow-lg pb-2">
             <Image src={props.image} alt="company logo" className="" width={400} height={200} />
             <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">{props.title}</div>
+                <div className="font-bold text-xl mb-2">{props.name}</div>
                 {/* <p className="text-black text-base">
                     {props.description}
                 </p> */}
-                <a href={props.href} className="text-lime-950 hover:underline">Produktdetails</a>
+                <a href={"/shop/" + props.CategoryID + "/" + props.productID } className="text-lime-950 hover:underline">Produktdetails</a>
             </div>
             <div className="px-6 pb-2">
                 <p className="text-black text-base">
-                    {props.price} CHF
+                    {(props.price.toString())} CHF
                 </p>
                 {session && session.user ? (
                     <>
