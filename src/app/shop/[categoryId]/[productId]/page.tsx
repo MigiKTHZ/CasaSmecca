@@ -1,12 +1,21 @@
 import React from "react";
 import { HiOutlineArrowCircleRight } from "react-icons/hi";
 import Image from "next/image";
+import prisma from '@/app/lib/prisma';
+import { Product } from "@prisma/client";
 
-export default function ProductDetails({
+export default async function ProductDetails({
     params,
 }: {
-    params: { productId : string };
+    params: { productId : number };
 }) {
+
+    const product: Product | null = await prisma.product.findUnique({
+        where: {
+            productID: Number(params.productId),
+        },
+    });
+
     return (
         <>
             <div className="px-3 max-w-7xl m-auto">
@@ -15,8 +24,8 @@ export default function ProductDetails({
                         {/* Product Image */}
                         <div className="overflow-hidden rounded-xl">
                             <Image
-                                src={"/alcohol/IMG_8441.jpg"}
-                                alt="productDetailalcohol"
+                                src={"" + product?.image}
+                                alt="productDetail"
                                 width={400}
                                 height={139}
                             />
@@ -26,17 +35,14 @@ export default function ProductDetails({
                             <div>
                                 {/* Product Title */}
                                 <h1 className="text-3xl text-lime-950 font-semibold sm:text-4xl">
-                                    Limoncello
+                                    {product?.name} 
                                 </h1>
                                 {/* Product Description */}
                                 <p className="mt-3 text-lime-700 text-md leading-6 text-justify sm:text-left sm:mt-4">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                                    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                    Sed enim ut sem viverra aliquet eget sit. Odio facilisis
-                                    mauris sit amet
+                                    {product?.description}
                                 </p>
                                 <span className="text-x text-lime-950 font-semibold sm:text-2xl">
-                                    $20
+                                    {product?.price + " CHF"}
                                 </span>
                             </div>
                             {/* Quantity Input and Order Button */}
