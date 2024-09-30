@@ -14,7 +14,7 @@ export default function ProductSidenav({categories} : ProductSidenavProps) {
             <Sidebar.Items className="bg-lime-100">
                 <Sidebar.ItemGroup className="bg-lime-100">
                     {categories.map((category) => (
-                        <Sidebar.Item key={category.CategoryID} href={category.href}>
+                        <Sidebar.Item key={category.CategoryID} href={"/shop/" + category.CategoryID}>
                             {category.name}
                         </Sidebar.Item>
                     ))}
