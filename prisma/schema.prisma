@@ -13,8 +13,7 @@ model CustomerOrder {
   shippingAdress String       @db.VarChar(200)
   user           User         @relation(fields: [userID], references: [userID])
   userID         Int
-  productOrder   ProductOrder @relation(fields: [productOrderID], references: [productOrderID])
-  productOrderID Int          @unique
+  productOrders ProductOrder[]
 }
 
 model Product {
@@ -41,7 +40,8 @@ model ProductOrder {
   product        Product        @relation(fields: [productID], references: [productID])
   productID      Int
   count          Int
-  customerOrder  CustomerOrder?
+  customerOrder  CustomerOrder  @relation(fields: [customerOrderID], references: [orderID]) // Reference back to CustomerOrder
+  customerOrderID Int           // Foreign key to CustomerOrder
 }
 
 model User {

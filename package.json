@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^1.6.0",
+    "@auth/prisma-adapter": "^2.6.0",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@nextui-org/react": "^2.2.10",
@@ -19,7 +19,7 @@
     "flowbite-react": "^0.8.0",
     "framer-motion": "^11.0.24",
     "next": "^14.1.4",
-    "next-auth": "^4.24.7",
+    "next-auth": "^4.24.8",
     "nvm": "^0.0.4",
     "react": "^18",
     "react-dom": "^18"

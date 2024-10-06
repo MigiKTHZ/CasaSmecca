@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { Product } from "@prisma/client";
+import React from "react";
 
 export default function Card(props: Product) {
     const { data: session } = useSession();
