@@ -15,6 +15,13 @@ export default function CartTotal({customerOrders} : OrdersPageProps) {
         return total + order.productOrders.reduce((orderTotal, productOrder) => orderTotal + productOrder.count, 0);
     }, 0) || 0; // Default to 0 if customerOrders is null or empty
 
+    const totalPrice = customerOrders?.reduce((total, order) => {
+        return total + order.productOrders.reduce((orderTotal, productOrder) => {
+            return orderTotal + (productOrder.count * Number(productOrder.product.price));
+        }, 0);
+    }, 0) || 0;
+
+
     return (
         <>
             <div className="bg-lime-900 p-4 rounded-lg">
@@ -23,7 +30,7 @@ export default function CartTotal({customerOrders} : OrdersPageProps) {
                 <h3 className="text-gray-300">{totalProductOrdersCount} Artikel</h3>
                 <div className="border-t-2 border-solid border-lime-100 rounded "></div>
                 <br />
-                <h3 className="text-lime-100">Total:</h3>
+                <h3 className="text-lime-100">Total: {totalPrice.toFixed(2)} CHF</h3>
                 <div className="border-t-2 border-solid border-lime-100 rounded "></div>
                 <br />
                 <button type="button" className="bg-lime-950 p-2 w-full text-lime-100 rounded-lg">Zur Kasse</button>
