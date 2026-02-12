@@ -1,35 +1,48 @@
-// app/api/register/route.js
-import { NextResponse } from "next/server";
-import prisma from "@/app/lib/prisma"; // Adjust the path according to your project structure
-import * as bcrypt from "bcrypt";
+// app/api/register/route.ts
+import { NextResponse } from "next/server"
+import prisma from "@/app/lib/prisma"
+import * as bcrypt from "bcrypt"
 
-export async function POST(req : Request) {
+export async function POST(req: Request) {
     try {
-        const { name, firstname, email, password, address, addressNr, phoneNr, plz, city } = await req.json();
+        const {
+            name,
+            firstname,
+            email,
+            password,
+            address,
+            addressNr,
+            phoneNr,
+            plz,
+            city,
+        } = await req.json()
 
-        const saltRounds = 10;
-        const passwordHash = await bcrypt.hash(password, saltRounds);
-
-        const user = {
-            name: name,
-            firstname: firstname,
-            email: email,
-            password: passwordHash,
-            adress: address,
-            adressNr: addressNr,
-            phoneNr: phoneNr,
-            plz: plz,
-            city: city,
-            adminFlag: false,
-        }
+        const passwordHash = await bcrypt.hash(password, 10)
 
         await prisma.user.create({
-            data: user,
-        });
+            data: {
+                name,
+                firstname,
+                email,
+                password: passwordHash,
+                address,
+                addressNr,
+                phoneNr,
+                plz,
+                city,
+                adminFlag: false,
+            },
+        })
 
-        return NextResponse.json({ message: "User registered successfully" }, { status: 201 });
+        return NextResponse.json(
+            { message: "User registered successfully" },
+            { status: 201 }
+        )
     } catch (error) {
-        console.error("Error creating user:", error);
-        return NextResponse.json({ message: "Error registering user" }, { status: 500 });
+        console.error("Error creating user:", error)
+        return NextResponse.json(
+            { message: "Error registering user" },
+            { status: 500 }
+        )
     }
 }

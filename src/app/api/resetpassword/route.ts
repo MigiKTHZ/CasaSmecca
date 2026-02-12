@@ -6,17 +6,12 @@ import prisma from "@/app/lib/prisma";
 
 const secretKey = process.env.NEXTAUTH_SECRET as string;
 
-interface ResetPasswordPayload {
-    token: string;
-    newPassword: string;
-}
 // Handler for POST requests
 export async function POST(req: Request) {
     const body = await req.json();
     const { token, newPassword } = body;
 
     console.log("Decoded token:", token);
-    console.log("newpassword:", newPassword);
 
     if (!token || !newPassword) {
         return NextResponse.json({ message: 'Token or new password missing' }, { status: 200});

@@ -1,3 +1,4 @@
+// schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,54 +9,130 @@ datasource db {
 }
 
 model CustomerOrder {
-  orderID        Int          @id @default(autoincrement())
-  status         String       @db.VarChar(50)
-  shippingAdress String       @db.VarChar(200)
-  user           User         @relation(fields: [userID], references: [userID])
-  userID         Int
-  productOrders ProductOrder[]
+  orderID         Int            @id @default(autoincrement())
+  status          String         @db.VarChar(50) @default("pending")
+  
+  // Stripe Integration Fields
+  stripePaymentIntentId String?  @unique @db.VarChar(255)
+  stripeSessionId       String?  @unique @db.VarChar(255)
+  stripeCustomerId      String?  @db.VarChar(255)
+  
+  // Age Verification Fields
+  ageVerified     Boolean        @default(false)
+  ageVerifiedAt   DateTime?
+  verificationMethod String?     @db.VarChar(50) // "date_of_birth", "id_scan", etc.
+  
+  totalAmount     Decimal        @db.Decimal(10, 2) @default(0)
+  createdAt       DateTime       @default(now())
+  
+  // Shipping/Tracking
+  shippingMethod  String?        @db.VarChar(50)
+  trackingNumber  String?        @db.VarChar(100)
+  
+  // Customer Information
+  email           String         @db.VarChar(200)
+  firstname       String         @db.VarChar(200)
+  name            String         @db.VarChar(200)
+  phoneNr         String         @db.VarChar(20)
+  
+  // Address
+  adress          String         @db.VarChar(200)
+  adressNr        String         @db.VarChar(10)
+  city            String         @db.VarChar(200)
+  plz             String         @db.VarChar(10)
+  
+  // Relations
+  user           User?           @relation(fields: [userID], references: [userID])
+  userID         Int?
+  
+  productOrders   ProductOrder[]
+  
+  // Metadata for additional data
+  metadata        Json?          @db.Json
+  
+  @@index([stripePaymentIntentId])
+  @@index([stripeSessionId])
+  @@index([stripeCustomerId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Product {
   productID       Int             @id @default(autoincrement())
   name            String          @db.VarChar(200)
-  description     String          @db.VarChar(200)
-  stock           Int
-  price           Decimal         @db.Decimal(10, 0)
-  image           String          @db.VarChar(200)      
-  productCategory ProductCategory @relation(fields: [CategoryID], references: [CategoryID])
-  CategoryID      Int
-  ProductOrder    ProductOrder[]
+  description     String?         @db.Text
+  stock           Int             @default(100)
+  price           Decimal         @db.Decimal(10, 2)
+  image           String          @db.VarChar(500)
+  
+  // Stripe Integration
+  stripeProductId String?         @unique @db.VarChar(255)
+  stripePriceId   String?         @unique @db.VarChar(255)
+  
+  // Product categorization
+  productCategory ProductCategory @relation(fields: [categoryID], references: [categoryID])
+  categoryID      Int
+  
+  // Age-restricted product flag
+  requiresAgeVerification Boolean @default(false)
+  minimumAge        Int           @default(18)
+  
+  productOrders   ProductOrder[]
+  
+  // New fields for special product types
+  weight          String?         @db.VarChar(50)
+  volume          String?         @db.VarChar(50)
+  packaging       String?         @db.VarChar(100)
+  fullWidth       Boolean         @default(false)
+  specialType     String?         @db.VarChar(50)
+  slug            String          @unique @db.VarChar(12)
+  
+  @@index([requiresAgeVerification])
+  @@index([stripeProductId])
+  @@index([slug])
 }
 
+// Other models remain the same...
 model ProductCategory {
-  CategoryID Int       @id @default(autoincrement())
-  name       String    @db.VarChar(200)
-  image      String    @db.VarChar(200)
-  products   Product[]
+  categoryID      Int       @id @default(autoincrement())
+  name            String    @db.VarChar(200)
+  image           String    @db.VarChar(500)
+  slug            String    @unique @db.VarChar(12)
+  products        Product[]
 }
 
 model ProductOrder {
-  productOrderID Int            @id @default(autoincrement())
-  product        Product        @relation(fields: [productID], references: [productID])
-  productID      Int
-  count          Int
-  customerOrder  CustomerOrder  @relation(fields: [customerOrderID], references: [orderID]) // Reference back to CustomerOrder
-  customerOrderID Int           // Foreign key to CustomerOrder
+  productOrderID  Int            @id @default(autoincrement())
+  product         Product        @relation(fields: [productID], references: [productID])
+  productID       Int
+  quantity        Int
+  priceAtPurchase Decimal        @db.Decimal(10, 2)
+  customerOrder   CustomerOrder  @relation(fields: [customerOrderID], references: [orderID])
+  customerOrderID Int
 }
 
 model User {
-  userID        Int             @id @default(autoincrement())
-  customerOrder CustomerOrder[]
-
-  name      String  @db.VarChar(200)
-  firstname String  @db.VarChar(200)
-  email     String  @unique @db.VarChar(200)
-  phoneNr   String  @db.VarChar(10)
-  adress    String  @db.VarChar(200)
-  adressNr  String  @db.VarChar(6)
-  city      String  @db.VarChar(200)
-  plz       String  @db.VarChar(4)
-  password  String  @db.VarChar(200)
-  adminFlag Boolean
+  userID         Int             @id @default(autoincrement())
+  customerOrders CustomerOrder[]
+  name           String    @db.VarChar(200)
+  firstname      String    @db.VarChar(200)
+  email          String    @unique @db.VarChar(200)
+  phoneNr        String    @db.VarChar(20)
+  address        String    @db.VarChar(200)
+  addressNr      String    @db.VarChar(10)
+  city           String    @db.VarChar(200)
+  plz            String    @db.VarChar(10)
+  password       String    @db.VarChar(200)
+  adminFlag      Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  
+  // Stripe customer reference
+  stripeCustomerId String? @unique @db.VarChar(255)
+  
+  // Age verification for registered users
+  dateOfBirth    DateTime?
+  ageVerified    Boolean   @default(false)
+  ageVerifiedAt  DateTime?
+  
+  @@index([stripeCustomerId])
 }

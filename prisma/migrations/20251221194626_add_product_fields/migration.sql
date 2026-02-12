@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE `Product` ADD COLUMN `fullWidth` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `packaging` VARCHAR(100) NULL,
+    ADD COLUMN `specialType` VARCHAR(50) NULL,
+    ADD COLUMN `volume` VARCHAR(50) NULL,
+    ADD COLUMN `weight` VARCHAR(50) NULL,
+    MODIFY `description` TEXT NULL,
+    MODIFY `stock` INTEGER NOT NULL DEFAULT 100;
